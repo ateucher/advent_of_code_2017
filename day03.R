@@ -6,7 +6,7 @@ test_array <- as.matrix(read.table(textConnection("17  16  15  14  13
 
 
 man_dist <- function(x, array) {
-  cent <- which(array == 1, arr.ind = TRUE)
+  cent <- ceiling(dim(array) / 2)
   loc <- which(array == x, arr.ind = TRUE)
   sum(abs(cent - loc))
 }
