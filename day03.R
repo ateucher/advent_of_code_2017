@@ -26,7 +26,7 @@ wind <- function(length) {
   y <- centre
   dir <- "r"
   dist <- 1
-  rotation_counter <- 1
+  add_to_length <- FALSE
   
   mat[x,y] <- 1
   
@@ -35,40 +35,46 @@ wind <- function(length) {
     if (dir == "r") {
       x_start <- x + 1
       x_end <- min(x_start + dist - 1, sq)
-      mat[y, x_start:x_end] <- arr[i:(min(i + dist - 1, length(arr)))]
+      x_pos <- x_start:x_end
+      y_pos <- y
       x <- x + dist
-      dir <- "u"
     } else if (dir == "u") {
       y_start <- y - 1
       y_end <- min(y_start - dist + 1, sq)
-      mat[y_start:y_end, x] <- arr[i:(min(i + dist - 1, length(arr)))]
+      y_pos <- y_start:y_end
+      x_pos <- x
       y <- y - dist
-      dir <- "l"
     } else if (dir == "l") {
       x_start <- x - 1
       x_end <- min(x_start - dist + 1, sq)
-      mat[y, x_start:x_end] <- arr[i:(min(i + dist - 1, length(arr)))]
+      x_pos <- x_start:x_end
+      y_pos <- y
       x <- x - dist
-      dir <- "d"
     } else if (dir == "d") {
       y_start <- y + 1
       y_end <- min(y_start + dist - 1, sq)
-      mat[y_start:y_end, x] <- arr[i:(min(i + dist - 1, length(arr)))]
+      y_pos <- y_start:y_end
+      x_pos <- x
       y <- y + dist
-      dir <- "r"
     }
+    
+    mat[y_pos, x_pos] <- arr[i:(min(i + dist - 1, length(arr)))]
     
     i <- i + dist
     
-    if(rotation_counter == 1) {
-      rotation_counter <- 2
-    } else if (rotation_counter == 2) {
-      rotation_counter <- 1
-      dist <- dist + 1
-    }
+    if (add_to_length) dist <- dist + 1
+    add_to_length <- !add_to_length
+
+    dir <- change_direction(dir)
     
   }
   mat
+}
+
+change_direction <- function(dir) {
+  dirs <- c("r", "u", "l", "d")
+  if (dir == "d") return("r")
+  dirs[which(dir == dirs) + 1]
 }
 
 foo <- wind(1024)
