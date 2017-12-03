@@ -1,4 +1,4 @@
-test_input <- scan("day1_input.txt", what = "character")
+test_input <- scan("day01_input.txt", what = "character")
 
 reverse_captcha <- function(input) {
   int_vec <- as.integer(strsplit(as.character(input), split = "")[[1]])

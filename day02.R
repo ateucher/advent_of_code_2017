@@ -11,7 +11,7 @@ checksum <- function(s, sep = "\t") {
 
 checksum(textConnection(spreadsheet), sep = " ")
 
-checksum("day2_input.txt")
+checksum("day02_input.txt")
 
 spreadsheet2 <- "5 9 2 8
 9 4 7 3
@@ -42,5 +42,5 @@ get_evens <- function(vec) {
 }
 
 checksum2(textConnection(spreadsheet2), sep = " ") # 9
-checksum2("day2_input.txt")
+checksum2("day02_input.txt")
 
