@@ -64,7 +64,7 @@ wind <- function(length) {
     
     if (add_to_length) dist <- dist + 1
     add_to_length <- !add_to_length
-
+    
     dir <- change_direction(dir)
     
   }
@@ -131,14 +131,14 @@ wind2 <- function(length, type = c("sequential", "neighbour_sum")) {
         type, 
         "sequential" = i + 1, # starting at 2 since we pre-populated the centre
         "neighbour_sum"  = sum(mat[y + 1, x], 
-                            mat[y - 1, x], 
-                            mat[y + 1, x + 1],
-                            mat[y + 1, x - 1], 
-                            mat[y, x + 1], 
-                            mat[y, x - 1],
-                            mat[y - 1, x + 1],
-                            mat[y - 1, x - 1]
-                            , na.rm = TRUE))
+                               mat[y - 1, x], 
+                               mat[y + 1, x + 1],
+                               mat[y + 1, x - 1], 
+                               mat[y, x + 1], 
+                               mat[y, x - 1],
+                               mat[y - 1, x + 1],
+                               mat[y - 1, x - 1]
+                               , na.rm = TRUE))
       
       mat[y, x] <- mat_val
       i <- i + 1
@@ -146,7 +146,7 @@ wind2 <- function(length, type = c("sequential", "neighbour_sum")) {
       
       # Avoid trying to write a value that doesn't exist
       if (i > arr_len) break()
-
+      
     }
     
     # Increase the length of the arm every second time
