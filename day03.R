@@ -78,7 +78,93 @@ change_direction <- function(dir) {
 }
 
 foo <- wind(1024)
-dist(1024, foo)
+man_dist(1024, foo)
 
 test_mat <- wind(325489)
-dist(325489, test_mat)
+man_dist(325489, test_mat)
+
+# Part 2
+# Need to re-write the function so that it writes the values one by one, 
+# rather than one spiral arm at a time to accomodate the need to sum the neighbours
+# as you go
+
+wind2 <- function(length, type = c("sequential", "neighbour_sum")) {
+  sq <- ceiling(sqrt(length))
+  if (sq %% 2 == 0) sq <- sq + 1
+  
+  # create an outer buffer of NAs so can handle missing neighhours
+  if (type == "neighbour_sum") {
+    mat <- matrix(nrow = sq + 2, ncol = sq + 2)
+  } else if (type == "sequential") {
+    mat <- matrix(nrow = sq, ncol = sq)
+  } else {
+    stop("You specified an invalid type of matrix")
+  }
+  
+  arr <- seq(sq * sq)[-1]
+  centre <- ceiling(ncol(mat) / 2)
+  
+  x <- centre
+  y <- centre
+  dir <- "r"
+  dist <- 1
+  add_to_length <- FALSE
+  
+  mat[x,y] <- 1
+  
+  i <- 1
+  while (i <= length(arr)) {
+    
+    for (d in seq_len(dist)) {
+      
+      if (dir == "r") {
+        x <- x + 1
+      } else if (dir == "u") {
+        y <- y - 1
+      } else if (dir == "l") {
+        x <- x - 1
+      } else if (dir == "d") {
+        y <- y + 1
+      }
+      
+      mat_val <- switch(
+        type, 
+        "sequential" = arr[i], 
+        "neighbour_sum"  = sum(mat[y + 1, x], 
+                            mat[y - 1, x], 
+                            mat[y + 1, x + 1],
+                            mat[y + 1, x - 1], 
+                            mat[y, x + 1], 
+                            mat[y, x - 1],
+                            mat[y - 1, x + 1],
+                            mat[y - 1, x - 1]
+                            , na.rm = TRUE))
+      
+      mat[y, x] <- mat_val
+      i <- i + 1
+      d <- d + 1
+      
+      # Avoid trying to write a value that doesn't exist
+      if (i > length(arr)) break()
+
+    }
+    
+    if (add_to_length) dist <- dist + 1
+    add_to_length <- !add_to_length
+    dir <- change_direction(dir)
+    
+  }
+  mat
+}
+
+# still works with part one:
+foo <- wind2(1024, "sequential")
+man_dist(1024, foo)
+
+test_mat <- wind2(325489, "sequential")
+man_dist(325489, test_mat)
+
+
+part_2_mat <- wind2(325489, "neighbour_sum")
+
+min(part_2_mat[part_2_mat > 325489], na.rm = TRUE)
