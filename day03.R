@@ -92,8 +92,8 @@ wind2 <- function(length, type = c("sequential", "neighbour_sum")) {
   sq <- ceiling(sqrt(length))
   if (sq %% 2 == 0) sq <- sq + 1
   
-  # create an outer buffer of NAs so can handle missing neighhours
   if (type == "neighbour_sum") {
+    # create an outer buffer of NAs so can handle missing neighhours
     mat <- matrix(nrow = sq + 2, ncol = sq + 2)
   } else if (type == "sequential") {
     mat <- matrix(nrow = sq, ncol = sq)
@@ -101,19 +101,19 @@ wind2 <- function(length, type = c("sequential", "neighbour_sum")) {
     stop("You specified an invalid type of matrix")
   }
   
-  arr <- seq(sq * sq)[-1]
+  arr_len <- sq * sq - 1
   centre <- ceiling(ncol(mat) / 2)
   
-  x <- centre
-  y <- centre
+  # Start off going to the right a distance of one
   dir <- "r"
   dist <- 1
   add_to_length <- FALSE
+  mat[centre,centre] <- 1
   
-  mat[x,y] <- 1
+  x <- y <- centre
   
   i <- 1
-  while (i <= length(arr)) {
+  while (i <= arr_len) {
     
     for (d in seq_len(dist)) {
       
@@ -129,7 +129,7 @@ wind2 <- function(length, type = c("sequential", "neighbour_sum")) {
       
       mat_val <- switch(
         type, 
-        "sequential" = arr[i], 
+        "sequential" = i + 1, # starting at 2 since we pre-populated the centre
         "neighbour_sum"  = sum(mat[y + 1, x], 
                             mat[y - 1, x], 
                             mat[y + 1, x + 1],
@@ -145,12 +145,14 @@ wind2 <- function(length, type = c("sequential", "neighbour_sum")) {
       d <- d + 1
       
       # Avoid trying to write a value that doesn't exist
-      if (i > length(arr)) break()
+      if (i > arr_len) break()
 
     }
     
+    # Increase the length of the arm every second time
     if (add_to_length) dist <- dist + 1
     add_to_length <- !add_to_length
+    
     dir <- change_direction(dir)
     
   }
