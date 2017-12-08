@@ -20,6 +20,7 @@ tbl <- str_split(lines, "\\s\\(|\\)|\\s->\\s", simplify = TRUE)[,-3] %>%
 # The base program should be the only one that is a parent but not a child
 base_prog <- setdiff(unique(tbl$name), na.omit(unique(unlist(tbl$children))))
 
+## Part 2
 make_tree <- function(tbl, root_name) {
   tree <- NULL
   if (is.na(root_name)) return(tree) # exit the function when you hit a leaf
