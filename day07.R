@@ -14,7 +14,7 @@ tbl <- str_split(lines, "\\s\\(|\\)|\\s->\\s", simplify = TRUE)[,-3] %>%
     wt = as.numeric(wt),
     children = map(children, ~ str_split(.x, ", ")[[1]]), 
     children = rapply(children, function(x) ifelse(!nzchar(x), NA_character_, x), how = "replace"), 
-    leaf = map(children, ~ ifelse(all(is.na(.x)), TRUE, FALSE)))
+    leaf = map_lgl(children, ~ ifelse(all(is.na(.x)), TRUE, FALSE)))
 
 # Answer to part one:
 # The base program should be the only one that is a parent but not a child
@@ -36,3 +36,17 @@ make_tree <- function(tbl, root_name) {
 
 tree <- make_tree(tbl, base_prog)
 
+# This is as far as I got. sum_weights will sum the immediate children of each node, but 
+# doing it all the way to the tips is hard. Need to somehow start at the tips and work backwards
+
+sum_weights <- function(x) {
+  if (is.null(x$children)) return(x)
+  x$sum_wt <- sum(map_dbl(x$children, ~ifelse(is.null(.x$sum_wt), .x$wt, .x$sum_wt))) + x$wt
+  x$children <- lapply(x$children, sum_weights)
+  x
+}
+
+
+
+# debug(sum_weights)
+foo <- sum_weights(tree)
