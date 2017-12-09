@@ -1,14 +1,15 @@
 library(readr)
 library(dplyr)
 library(testthat)
+library(glue)
 
 get_max_val <- function(input) {
   
   instructions <- read_delim(input, delim = " ", col_names = c("target", "direction", "value", "if", "condition_target", "condition", "condition_val"))
   instructions <- instructions %>% 
-    mutate(cond_expr = sprintf("if (%s %s %s) %s <- %s %s %s", 
-                               condition_target, condition, condition_val, target, target, 
-                               ifelse(direction == "inc", "+", "-"), value))
+    mutate(direction = ifelse(direction == "inc", "+", "-"),
+           cond_expr = glue("if ({condition_target} {condition} {condition_val}) 
+                                {target} <- {target} {direction} {value}"))
   
   nms <- unique(instructions$target)
   
