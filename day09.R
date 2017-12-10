@@ -86,4 +86,4 @@ expect_equal(sanitize(test_5)[[2]], 0)
 expect_equal(sanitize(test_6)[[2]], 0)
 expect_equal(sanitize(test_7)[[2]], 10)
 
-sanitize(input)[[2]] # 11453 is too high (9978)
+sanitize(input)[[2]] # 9978
