@@ -35,10 +35,12 @@ sanitize <- function(x, removed) {
   }
   
   # Regex to match outer angle brackets modified from here:
-  # https://stackoverflow.com/a/35271017
+  # https://stackoverflow.com/a/35271017.
+  # Use gsub so can use PERL-compatbile regex (the recursive bit)
   pattern <- "\\<(?>[^>]*(?R)?)*\\>"
   
   sanitized <- gsub(pattern, "<>", x, perl = TRUE)
+  
   list(str_replace_all(sanitized, "<>|,", ""), 
        n_orig - (nchar(sanitized) + n_removed))
 }
