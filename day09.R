@@ -34,14 +34,12 @@ sanitize <- function(x, removed) {
     n_removed <- n_removed + 2
   }
   
-  x <- str_replace_all(x, ",", "")
-  
   # Regex to match outer angle brackets modified from here:
   # https://stackoverflow.com/a/35271017
   pattern <- "\\<(?>[^>]*(?R)?)*\\>"
   
   sanitized <- gsub(pattern, "<>", x, perl = TRUE)
-  list(str_replace_all(sanitized, "<>", ""), 
+  list(str_replace_all(sanitized, "<>|,", ""), 
        n_orig - (nchar(sanitized) + n_removed))
 }
 
@@ -86,4 +84,4 @@ expect_equal(sanitize(test_5)[[2]], 0)
 expect_equal(sanitize(test_6)[[2]], 0)
 expect_equal(sanitize(test_7)[[2]], 10)
 
-sanitize(input)[[2]] # 11453 is too high
+sanitize(input)[[2]] # 11453 is too high (9978)
