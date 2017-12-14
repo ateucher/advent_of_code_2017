@@ -86,4 +86,4 @@ expect_equal(twister2(256, "AoC 2017"),  "33efeb34ea91902bb2f59c9920caa6cd")
 expect_equal(twister2(256, c(1,2,3)),  "3efbe78a8d82f29979031a4aa0b16a9d")
 expect_equal(twister2(256, "1,2,4"),  "63960835bcdc130f0b66d7ff4f6a5a8e")
 
-
+twister2(256, input)
